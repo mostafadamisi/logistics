@@ -271,13 +271,16 @@
   <!-- Modals & Overlays -->
   <div id="loadingOverlay" class="modal-overlay">
     <div class="loader-content flex-col flex-center text-center">
-      <div class="progress-bar"
-        style="width:300px; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; margin-bottom:15px;">
-        <div class="progress-bar-fill"
-          style="width:0%; height:100%; background:var(--devorise-cyan); box-shadow:0 0 15px var(--devorise-cyan);">
-        </div>
+      <div class="tactical-loader">
+        <div class="radar-ring ring-1"></div>
+        <div class="radar-ring ring-2"></div>
+        <div class="radar-ring ring-3"></div>
+        <div class="scanner-line"></div>
+        <div class="core-dot"></div>
       </div>
-      <div id="loadingStepText" class="loading-step-text text-muted font-medium text-base">Initializing AI Agent...
+      <div class="loading-text-wrapper">
+        <div id="loadingStepText" class="loading-step-text">INITIALIZING SYSTEM</div>
+        <div class="loading-subtext"> // TACTICAL_ AI_AGENT_ACTIVE // </div>
       </div>
     </div>
   </div>

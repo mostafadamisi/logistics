@@ -725,16 +725,46 @@ class UIService {
         this.charts[id] = new Chart(ctx, { type, data, options: commonOptions });
     }
 
-    showLoader(msg = 'Processing...') {
+    showLoader(msg) {
         const ol = document.getElementById('loadingOverlay');
         const txt = document.getElementById('loadingStepText');
+        
         if (ol) ol.style.display = 'flex';
-        if (txt) txt.textContent = msg;
+        
+        // Reset text
+        if (txt) txt.textContent = msg || 'INITIALIZING SYSTEM';
+        
+        // Clear any existing interval
+        if (this.loaderInterval) clearInterval(this.loaderInterval);
+        
+        // Tactical Text Cycling
+        const messages = [
+            'AGENT FINDING BEST ROUTES',
+            'CONTACTING LOGISTICS GRID',
+            'SEARCHING FOR NEAREST STOP',
+            'CALCULATING OPTIMAL PATHS',
+            'ANALYZING TRAFFIC PATTERNS',
+            'AGENT CALLING APIS',
+            'SYNCING WITH FLEET COMMAND'
+        ];
+        
+        let msgIdx = 0;
+        this.loaderInterval = setInterval(() => {
+            if (txt) {
+                // Glitch effect or simple cycle
+                txt.textContent = messages[msgIdx];
+                msgIdx = (msgIdx + 1) % messages.length;
+            }
+        }, 1200); // 1.2s cycle
     }
 
     hideLoader() {
         const ol = document.getElementById('loadingOverlay');
         if (ol) ol.style.display = 'none';
+        if (this.loaderInterval) {
+            clearInterval(this.loaderInterval);
+            this.loaderInterval = null;
+        }
     }
 
     showToast(msg) {
