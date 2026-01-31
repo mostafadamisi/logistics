@@ -50,42 +50,42 @@
         <div class="dashboard-grid page-shell">
           <aside class="sidebar-left">
             <div class="card devorise-glass-card">
-            <h4 class="devorise-heading">
-              <i data-lucide="layout-dashboard" class="lucide-card-icon"></i>
-              Operational Overview
-            </h4>
-            <div class="kv"><span>Total Stops</span><strong id="ov-stops" class="text-gradient">0</strong></div>
-            <div class="kv"><span>Total Distance</span><strong id="ov-distance" class="text-primary">-</strong></div>
-            <div class="kv"><span>Trucks Used</span><strong id="ov-trucks" class="text-primary">-</strong></div>
-            <div class="kv"><span>Depot</span><strong class="text-primary">Devorise Logistics HQ </strong></div>
-          </div>
+              <h4 class="devorise-heading">
+                <i data-lucide="layout-dashboard" class="lucide-card-icon"></i>
+                Operational Overview
+              </h4>
+              <div class="kv"><span>Total Stops</span><strong id="ov-stops" class="text-gradient">0</strong></div>
+              <div class="kv"><span>Total Distance</span><strong id="ov-distance" class="text-primary">-</strong></div>
+              <div class="kv"><span>Trucks Used</span><strong id="ov-trucks" class="text-primary">-</strong></div>
+              <div class="kv"><span>Depot</span><strong class="text-primary">Devorise Logistics HQ </strong></div>
+            </div>
 
-          <div class="card devorise-glass-card">
-            <h4 class="devorise-heading">
-              <i data-lucide="map-pin" class="lucide-card-icon"></i>
-              Delivery Points (<span id="pt-count">0</span>)
-            </h4>
-            <div class="flex-between mb-3 text-sm">
-              <p class="text-muted">Click map to initialize points</p>
-              <button id="toggleEdit" class="devorise-btn-secondary text-xs">Add Mode: OFF</button>
+            <div class="card devorise-glass-card">
+              <h4 class="devorise-heading">
+                <i data-lucide="map-pin" class="lucide-card-icon"></i>
+                Delivery Points (<span id="pt-count">0</span>)
+              </h4>
+              <div class="flex-between mb-3 text-sm">
+                <p class="text-muted">Click map to initialize points</p>
+                <button id="toggleEdit" class="devorise-btn-secondary text-xs">Add Mode: OFF</button>
+              </div>
+              <div class="flex-between mb-3 text-sm">
+                <span class="text-muted">Active Fleet:</span>
+                <select id="numTrucks" class="devorise-input text-xs" style="width: auto;">
+                  <option value="1" selected>1 Truck</option>
+                  <option value="2">2 Trucks</option>
+                  <option value="3">3 Trucks</option>
+                  <option value="4">4 Trucks</option>
+                  <option value="5">5 Trucks</option>
+                </select>
+              </div>
+              <div class="flex-col gap-2">
+                <button id="genBtn" class="devorise-btn-primary">Generate Execution Plan</button>
+                <button id="randomBtn" class="devorise-btn-primary" style="opacity: 0.9;">+ Add 50 Autonomous
+                  Points</button>
+                <button id="openManager" class="devorise-btn-primary btn-glass">Manage Stops</button>
+              </div>
             </div>
-            <div class="flex-between mb-3 text-sm">
-              <span class="text-muted">Active Fleet:</span>
-              <select id="numTrucks" class="devorise-input text-xs" style="width: auto;">
-                <option value="1" selected>1 Truck</option>
-                <option value="2">2 Trucks</option>
-                <option value="3">3 Trucks</option>
-                <option value="4">4 Trucks</option>
-                <option value="5">5 Trucks</option>
-              </select>
-            </div>
-            <div class="flex-col gap-2">
-              <button id="genBtn" class="devorise-btn-primary">Generate Execution Plan</button>
-              <button id="randomBtn" class="devorise-btn-primary" style="opacity: 0.9;">+ Add 50 Autonomous
-                Points</button>
-              <button id="openManager" class="devorise-btn-primary btn-glass">Manage Stops</button>
-            </div>
-          </div>
           </aside>
 
           <section class="map-panel devorise-glass-card">
@@ -99,43 +99,44 @@
           </section>
 
           <aside class="sidebar-right">
-          <div id="routeCard" class="card devorise-glass-card">
-            <div class="flex-between mb-3 cursor-pointer theme-transition" onclick="toggleRouteCard()" role="button"
-              tabindex="0" aria-label="Toggle Route Execution Panel"
-              onkeydown="if(event.key==='Enter'||event.key===' ')toggleRouteCard()">
-              <h4 class="devorise-heading" style="margin:0">
-                <i data-lucide="route" class="lucide-card-icon"></i>
-                Route Execution
-              </h4>
-              <i data-lucide="maximize-2" id="expandIcon" class="text-muted" style="width:16px; height:16px;"></i>
-            </div>
+            <div id="routeCard" class="card devorise-glass-card">
+              <div class="flex-between mb-3 cursor-pointer theme-transition" onclick="toggleRouteCard()" role="button"
+                tabindex="0" aria-label="Toggle Route Execution Panel"
+                onkeydown="if(event.key==='Enter'||event.key===' ')toggleRouteCard()">
+                <h4 class="devorise-heading" style="margin:0">
+                  <i data-lucide="route" class="lucide-card-icon"></i>
+                  Route Execution
+                </h4>
+                <i data-lucide="maximize-2" id="expandIcon" class="text-muted" style="width:16px; height:16px;"></i>
+              </div>
 
-            <div id="capacityWarning" class="mb-3 p-3 rounded-md text-xs text-orange bg-glass border-orange hidden">
-              Capacity Threshold!
-            </div>
+              <div id="capacityWarning" class="mb-3 p-3 rounded-md text-xs text-orange bg-glass border-orange hidden">
+                Capacity Threshold!
+              </div>
 
-            <div class="tabs flex gap-2 mb-3" id="routeTabs"></div>
+              <div class="tabs flex gap-2 mb-3" id="routeTabs"></div>
 
-            <div id="timelineContainer">
-              <div id="routeHeader" class="text-muted mb-2 text-sm">Initialize an agent</div>
-              <div id="routeTimeline" style="display:none; max-height: 400px; overflow-y: auto;">
-                <div id="timelineItems" class="timeline-items"></div>
+              <div id="timelineContainer">
+                <div id="routeHeader" class="text-muted mb-2 text-sm">Initialize an agent</div>
+                <div id="routeTimeline" style="display:none; max-height: 400px; overflow-y: auto;">
+                  <div id="timelineItems" class="timeline-items"></div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="card devorise-glass-card">
-            <h4 class="devorise-heading">
-              <i data-lucide="trending-up" class="lucide-card-icon"></i>
-              Execution Analytics
-            </h4>
-            <div class="kv"><span>Total Distance</span><strong id="total-dist" class="text-primary">-</strong></div>
-            <div class="kv"><span>Utilization Rate</span><strong id="overall-pct" class="text-gradient">-</strong></div>
-            <div class="flex-col gap-2 mt-3">
-              <button id="clearRoutes" class="devorise-btn-primary btn-danger-ghost">Clear Execution</button>
-              <button id="removeAllStops" class="devorise-btn-primary btn-danger-ghost">Reset Environment</button>
+            <div class="card devorise-glass-card">
+              <h4 class="devorise-heading">
+                <i data-lucide="trending-up" class="lucide-card-icon"></i>
+                Execution Analytics
+              </h4>
+              <div class="kv"><span>Total Distance</span><strong id="total-dist" class="text-primary">-</strong></div>
+              <div class="kv"><span>Utilization Rate</span><strong id="overall-pct" class="text-gradient">-</strong>
+              </div>
+              <div class="flex-col gap-2 mt-3">
+                <button id="clearRoutes" class="devorise-btn-primary btn-danger-ghost">Clear Execution</button>
+                <button id="removeAllStops" class="devorise-btn-primary btn-danger-ghost">Reset Environment</button>
+              </div>
             </div>
-          </div>
           </aside>
         </div>
         <footer class="app-footer page-shell">
@@ -150,37 +151,37 @@
       <div id="analytics-view" class="view-container" style="display: none;">
         <div class="page-shell">
           <div class="analytics-grid">
-          <!-- KPI Cards -->
-          <div class="card devorise-glass-card">
-            <div class="text-muted text-xs mb-2">Total Distance</div>
-            <div id="kpi-distance" class="kpi-value text-xl">- km</div>
-          </div>
-          <div class="card devorise-glass-card">
-            <div class="text-muted text-xs mb-2">Fleet Utilization</div>
-            <div id="kpi-utilization" class="kpi-value text-xl text-cyan">- %</div>
-          </div>
-          <div class="card devorise-glass-card">
-            <div class="text-muted text-xs mb-2">Avg Payload</div>
-            <div id="kpi-payload" class="kpi-value text-xl text-purple-light">- kg</div>
-          </div>
-          <div class="card devorise-glass-card">
-            <div class="text-muted text-xs mb-2">Optimization Time</div>
-            <div id="kpi-time" class="kpi-value text-xl">- s</div>
-          </div>
+            <!-- KPI Cards -->
+            <div class="card devorise-glass-card">
+              <div class="text-muted text-xs mb-2">Total Distance</div>
+              <div id="kpi-distance" class="kpi-value text-xl">- km</div>
+            </div>
+            <div class="card devorise-glass-card">
+              <div class="text-muted text-xs mb-2">Fleet Utilization</div>
+              <div id="kpi-utilization" class="kpi-value text-xl text-cyan">- %</div>
+            </div>
+            <div class="card devorise-glass-card">
+              <div class="text-muted text-xs mb-2">Avg Payload</div>
+              <div id="kpi-payload" class="kpi-value text-xl text-purple-light">- kg</div>
+            </div>
+            <div class="card devorise-glass-card">
+              <div class="text-muted text-xs mb-2">Optimization Time</div>
+              <div id="kpi-time" class="kpi-value text-xl">- s</div>
+            </div>
 
-          <!-- Charts -->
-          <div class="card devorise-glass-card" style="grid-column: span 2; height: 350px;">
-            <h4 class="devorise-heading mb-4">Utilization per Truck</h4>
-            <div style="height: 280px;"><canvas id="utilizationChart"></canvas></div>
-          </div>
-          <div class="card devorise-glass-card" style="grid-column: span 2; height: 350px;">
-            <h4 class="devorise-heading mb-4">Distance Coverage (km)</h4>
-            <div style="height: 280px;"><canvas id="distanceChart"></canvas></div>
-          </div>
-          <div class="card devorise-glass-card" style="grid-column: span 2; height: 350px;">
-            <h4 class="devorise-heading mb-4">Payload Distribution</h4>
-            <div style="height: 280px;"><canvas id="payloadChart"></canvas></div>
-          </div>
+            <!-- Charts -->
+            <div class="card devorise-glass-card" style="grid-column: span 2; height: 350px;">
+              <h4 class="devorise-heading mb-4">Utilization per Truck</h4>
+              <div style="height: 280px;"><canvas id="utilizationChart"></canvas></div>
+            </div>
+            <div class="card devorise-glass-card" style="grid-column: span 2; height: 350px;">
+              <h4 class="devorise-heading mb-4">Distance Coverage (km)</h4>
+              <div style="height: 280px;"><canvas id="distanceChart"></canvas></div>
+            </div>
+            <div class="card devorise-glass-card" style="grid-column: span 2; height: 350px;">
+              <h4 class="devorise-heading mb-4">Payload Distribution</h4>
+              <div style="height: 280px;"><canvas id="payloadChart"></canvas></div>
+            </div>
           </div>
         </div>
         <footer class="app-footer page-shell">
@@ -195,67 +196,67 @@
       <div id="stops-view" class="view-container" style="display: none;">
         <div class="page-shell">
           <div class="stops-layout">
-          <!-- Add Stop Form -->
-          <div class="card devorise-glass-card">
-            <h3 class="devorise-heading mb-5">
-              <i data-lucide="plus-circle" class="lucide-card-icon"></i>
-              Add New Stop
-            </h3>
-
-            <div class="form-group mb-4">
-              <label class="text-muted text-sm block mb-2">Stop ID (Optional)</label>
-              <input type="text" id="stop-id-input" class="devorise-input" placeholder="e.g. STOP-001">
-            </div>
-
-            <div class="form-group mb-4">
-              <label class="text-muted text-sm block mb-2">Location / Address</label>
-              <div class="flex gap-2">
-                <input type="text" id="stop-address-input" class="devorise-input"
-                  placeholder="Search address or coords...">
-                <button id="search-address-btn" class="devorise-btn-secondary" aria-label="Search Address">
-                  <i data-lucide="search" style="width: 16px; height: 16px;"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group mb-5">
-              <label class="text-muted text-sm block mb-2">Weight (kg)</label>
-              <input type="number" id="stop-weight-input" class="devorise-input" value="100" min="1">
-            </div>
-
-            <button id="add-stop-view-btn" class="devorise-btn-primary">Add to Route</button>
-          </div>
-
-          <!-- Stops List -->
-          <div class="card devorise-glass-card flex-col">
-            <div class="flex-between mb-4">
-              <h3 class="devorise-heading" style="margin: 0;">
-                <i data-lucide="list" class="lucide-card-icon"></i>
-                Active Stops
-                <span id="stops-count-badge" class="text-xs bg-cyan text-black px-2 py-1 rounded-full ml-2">0</span>
+            <!-- Add Stop Form -->
+            <div class="card devorise-glass-card">
+              <h3 class="devorise-heading mb-5">
+                <i data-lucide="plus-circle" class="lucide-card-icon"></i>
+                Add New Stop
               </h3>
+
+              <div class="form-group mb-4">
+                <label class="text-muted text-sm block mb-2">Stop ID (Optional)</label>
+                <input type="text" id="stop-id-input" class="devorise-input" placeholder="e.g. STOP-001">
+              </div>
+
+              <div class="form-group mb-4">
+                <label class="text-muted text-sm block mb-2">Location / Address</label>
+                <div class="flex gap-2">
+                  <input type="text" id="stop-address-input" class="devorise-input"
+                    placeholder="Search address or coords...">
+                  <button id="search-address-btn" class="devorise-btn-secondary" aria-label="Search Address">
+                    <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group mb-5">
+                <label class="text-muted text-sm block mb-2">Weight (kg)</label>
+                <input type="number" id="stop-weight-input" class="devorise-input" value="100" min="1">
+              </div>
+
+              <button id="add-stop-view-btn" class="devorise-btn-primary">Add to Route</button>
             </div>
 
-            <div class="table-container">
-              <table class="stops-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Coordinates</th>
-                    <th>Weight (kg)</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="stops-table-body">
-                  <!-- Populated by JS -->
-                </tbody>
-              </table>
+            <!-- Stops List -->
+            <div class="card devorise-glass-card flex-col">
+              <div class="flex-between mb-4">
+                <h3 class="devorise-heading" style="margin: 0;">
+                  <i data-lucide="list" class="lucide-card-icon"></i>
+                  Active Stops
+                  <span id="stops-count-badge" class="text-xs bg-cyan text-black px-2 py-1 rounded-full ml-2">0</span>
+                </h3>
+              </div>
 
-              <div id="no-stops-msg" class="text-center p-10 text-muted" style="display: none;">
-                <p>No stops added yet.</p>
+              <div class="table-container">
+                <table class="stops-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Coordinates</th>
+                      <th>Weight (kg)</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stops-table-body">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+
+                <div id="no-stops-msg" class="text-center p-10 text-muted" style="display: none;">
+                  <p>No stops added yet.</p>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
         <footer class="app-footer page-shell">
@@ -280,7 +281,11 @@
       </div>
       <div class="loading-text-wrapper">
         <div id="loadingStepText" class="loading-step-text">INITIALIZING SYSTEM</div>
-        <div class="loading-subtext"> // TACTICAL_ AI_AGENT_ACTIVE // </div>
+        <div class="loading-subtext"> TACTICAL_ AI_AGENT_ACTIVE </div>
+      </div>
+
+      <div class="tactical-progress-container">
+        <div class="tactical-progress-bar"></div>
       </div>
     </div>
   </div>

@@ -13,7 +13,8 @@ const CONFIG = {
     COLORS: [
         '#00F0FF', // Cyan (Electric)
         '#FF5500', // Orange (Safety)
-        '#00ff1aff', // White (High Contrast)
+        // Use 6-digit hex to avoid libs interpreting 8-digit hex as ARGB (causing color mismatches)
+        '#00FF1A', // Green
         '#0099CC', // Dim Cyan
         '#FF3333', // Alert Red
     ],
