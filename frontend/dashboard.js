@@ -22,6 +22,14 @@ const CONFIG = {
     TOAST_DURATION: 4000
 };
 
+function getRouteColor(route, index) {
+    const routeId = Number(route?.route_id);
+    if (Number.isFinite(routeId) && routeId > 0) {
+        return CONFIG.COLORS[(routeId - 1) % CONFIG.COLORS.length];
+    }
+    return CONFIG.COLORS[index % CONFIG.COLORS.length];
+}
+
 // ==========================================
 // 2. STATE STORE
 // ==========================================
@@ -225,7 +233,7 @@ class MapService {
         this.dimMarkers();
 
         routes.forEach((r, i) => {
-            const color = CONFIG.COLORS[i % CONFIG.COLORS.length];
+            const color = getRouteColor(r, i);
 
             // 1. Delivery Path (AntPath)
             let deliveryRoute;
@@ -461,7 +469,7 @@ class UIService {
         // Tabs
         optResult.routes.forEach((r, idx) => {
             const btn = document.createElement('button');
-            const color = CONFIG.COLORS[idx % CONFIG.COLORS.length];
+            const color = getRouteColor(r, idx);
             btn.className = `tab-btn ${idx === activeIdx ? 'active' : ''}`;
             btn.innerText = `T-${r.route_id}`;
 
@@ -474,7 +482,7 @@ class UIService {
 
         // Content
         const r = optResult.routes[activeIdx];
-        const color = CONFIG.COLORS[activeIdx % CONFIG.COLORS.length];
+        const color = getRouteColor(r, activeIdx);
 
         // Apply color to the entire timeline container for the thread
         timelineList.style.setProperty('--timeline-color', color);
@@ -590,8 +598,8 @@ class UIService {
 
         // --- Utilization Chart (Vertical Gradients) ---
         const utilCtx = document.getElementById('utilizationChart').getContext('2d');
-        const utilGradients = optResult.routes.map((_, i) =>
-            createGradient(utilCtx, CONFIG.COLORS[i % CONFIG.COLORS.length], false)
+        const utilGradients = optResult.routes.map((r, i) =>
+            createGradient(utilCtx, getRouteColor(r, i), false)
         );
 
         this.updateChart('utilizationChart', 'bar', {
@@ -615,8 +623,8 @@ class UIService {
 
         // --- Distance Chart (Horizontal Gradients) ---
         const distCtx = document.getElementById('distanceChart').getContext('2d');
-        const distGradients = optResult.routes.map((_, i) =>
-            createGradient(distCtx, CONFIG.COLORS[i % CONFIG.COLORS.length], true)
+        const distGradients = optResult.routes.map((r, i) =>
+            createGradient(distCtx, getRouteColor(r, i), true)
         );
 
         this.updateChart('distanceChart', 'bar', {
