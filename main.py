@@ -16,7 +16,6 @@ import time
 import os
 from pathlib import Path
 
-from app.optimizer import optimize_routes_json
 from app.config import TRUCK_CAPACITY_KG, API_PORT
 
 # Initialize FastAPI application
@@ -121,6 +120,8 @@ async def optimize_routes(payload: OptimizeRequest) -> Dict[str, Any]:
             o.model_dump() if hasattr(o, 'model_dump') else o.dict() 
             for o in orders
         ]
+        # Lazy import to keep cold-start fast for health checks
+        from app.optimizer import optimize_routes_json
         result = optimize_routes_json(orders_dicts, num_trucks=int(num_trucks))
 
         # Validate optimizer output
