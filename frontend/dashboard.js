@@ -478,6 +478,7 @@ class UIService {
 
         // Apply color to the entire timeline container for the thread
         timelineList.style.setProperty('--timeline-color', color);
+        header.style.setProperty('--route-color', color);
 
         header.innerHTML = `
             <div class="flex-between">
