@@ -508,6 +508,14 @@ class UIService {
         timelineList.style.setProperty('--timeline-color', color);
         header.style.setProperty('--route-color', color);
 
+        // SYNC: Update the main card border/glow to match the truck
+        const card = document.getElementById('routeCard');
+        if (card) {
+            card.style.setProperty('--active-route-color', color);
+            card.style.borderColor = color; // Direct sync
+            card.style.boxShadow = `0 0 20px ${this.adjustOpacity(color, 0.15)}`;
+        }
+
         header.innerHTML = `
             <div class="flex-between">
                 <span>Stops: <strong>${r.stop_sequence.length}</strong></span>
