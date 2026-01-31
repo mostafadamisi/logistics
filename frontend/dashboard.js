@@ -229,23 +229,39 @@ class MapService {
         this.routeLayers = [];
     }
 
+    adjustOpacity(color, opacity) {
+        if (color.startsWith('#')) {
+            let c = color.substring(1).split('');
+            if (c.length === 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+            const r = parseInt(c.slice(0, 2).join(''), 16);
+            const g = parseInt(c.slice(2, 4).join(''), 16);
+            const b = parseInt(c.slice(4, 6).join(''), 16);
+            return `rgba(${r},${g},${b},${opacity})`;
+        }
+        return color;
+    }
+
     drawRoutes(routes, points) {
         this.clearRoutes();
         this.dimMarkers();
 
         routes.forEach((r, i) => {
             const color = getRouteColor(r, i);
+            const dimmedColor = this.adjustOpacity(color, 0.25); // Dimmed background
 
             // 1. Delivery Path (AntPath)
             let deliveryRoute;
             if (L.polyline.antPath) {
                 deliveryRoute = L.polyline.antPath(r.delivery_polyline, {
                     delay: 1000,
-                    dashArray: [10, 20],
+                    dashArray: [10, 40], // Longer gap for "ant" effect
                     weight: 5,
-                    color: color,
-                    pulseColor: '#ffffff',
-                    opacity: 0.9
+                    color: dimmedColor,     // Context path is dimmed
+                    pulseColor: color,      // Ants are the TRUCK color
+                    opacity: 1,
+                    paused: false,
+                    reverse: false,
+                    hardwareAccelerated: true
                 }).addTo(this.map);
             } else {
                 deliveryRoute = L.polyline(r.delivery_polyline, { color: color, weight: 5 }).addTo(this.map);
@@ -253,16 +269,16 @@ class MapService {
 
             // 2. Return Trip
             const returnTrip = L.polyline(r.return_polyline || [], {
-                color: color, weight: 3, opacity: 0.5, dashArray: '8, 12'
+                color: color, weight: 2, opacity: 0.2, dashArray: '5, 10'
             }).addTo(this.map);
 
-            // 3. Arrows
+            // 3. Arrows (Optional - might conflict visually with ants, keeping subtle)
             if (typeof L.polylineDecorator === 'function' && L.Symbol && L.Symbol.arrowHead) {
                 try {
                     L.polylineDecorator(deliveryRoute, {
                         patterns: [{
                             offset: '10%', repeat: '20%',
-                            symbol: L.Symbol.arrowHead({ pixelSize: 10, polygon: false, pathOptions: { stroke: true, color: color, weight: 2 } })
+                            symbol: L.Symbol.arrowHead({ pixelSize: 8, polygon: false, pathOptions: { stroke: true, color: color, weight: 1, opacity: 0.5 } })
                         }]
                     }).addTo(this.map);
                 } catch (e) { }
@@ -307,7 +323,7 @@ class MapService {
                 direction: 'top',
                 offset: [0, -15],
                 className: 'tactical-tooltip',
-                opacity: 1
+                opacity: 0.95
             }).openTooltip();
 
             this.routeLayers.push(deliveryRoute);
@@ -331,6 +347,9 @@ class MapService {
 class UIService {
     constructor() {
         this.charts = {};
+        this.loaderInterval = null;
+        this.loaderHideTimeout = null;
+        this.loaderTransitionHandler = null;
         this.initEventListeners();
     }
 
@@ -729,15 +748,29 @@ class UIService {
     showLoader(msg) {
         const ol = document.getElementById('loadingOverlay');
         const txt = document.getElementById('loadingStepText');
-        
-        if (ol) ol.style.display = 'flex';
-        
+
+        if (!ol) return;
+
+        // Cancel any pending hide (fade-out -> display:none)
+        if (this.loaderHideTimeout) {
+            clearTimeout(this.loaderHideTimeout);
+            this.loaderHideTimeout = null;
+        }
+        if (this.loaderTransitionHandler) {
+            ol.removeEventListener('transitionend', this.loaderTransitionHandler);
+            this.loaderTransitionHandler = null;
+        }
+
+        ol.style.display = 'flex';
+        // Next frame so opacity transition can run
+        requestAnimationFrame(() => ol.classList.add('is-open'));
+
         // Reset text
         if (txt) txt.textContent = msg || 'INITIALIZING SYSTEM';
-        
+
         // Clear any existing interval
         if (this.loaderInterval) clearInterval(this.loaderInterval);
-        
+
         // Tactical Text Cycling
         const messages = [
             'AGENT FINDING BEST ROUTES',
@@ -748,7 +781,7 @@ class UIService {
             'AGENT CALLING APIS',
             'SYNCING WITH FLEET COMMAND'
         ];
-        
+
         let msgIdx = 0;
         this.loaderInterval = setInterval(() => {
             if (txt) {
@@ -761,7 +794,23 @@ class UIService {
 
     hideLoader() {
         const ol = document.getElementById('loadingOverlay');
-        if (ol) ol.style.display = 'none';
+        if (!ol) return;
+
+        // Fade out then fully disable
+        ol.classList.remove('is-open');
+
+        const finish = () => {
+            ol.style.display = 'none';
+            if (this.loaderTransitionHandler) {
+                ol.removeEventListener('transitionend', this.loaderTransitionHandler);
+                this.loaderTransitionHandler = null;
+            }
+        };
+
+        this.loaderTransitionHandler = finish;
+        ol.addEventListener('transitionend', finish, { once: true });
+        this.loaderHideTimeout = setTimeout(finish, 300);
+
         if (this.loaderInterval) {
             clearInterval(this.loaderInterval);
             this.loaderInterval = null;
